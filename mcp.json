@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "lucidlink": {
+      "command": "uvx",
+      "args": ["lucidlink-mcp"]
+    }
+  }
+}
