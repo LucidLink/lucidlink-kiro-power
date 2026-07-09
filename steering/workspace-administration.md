@@ -28,7 +28,7 @@ the user through enabling it:
        "mcpServers": {
          "power-kiro-lucidlink-power-lucidlink": {
            "command": "uvx",
-           "args": ["lucidlink-mcp"],
+           "args": ["lucidlink-mcp@latest"],
            "env": { "LUCIDLINK_MCP_TOOLSETS": "admin" }
          }
        }

@@ -2,7 +2,7 @@
   "mcpServers": {
     "lucidlink": {
       "command": "uvx",
-      "args": ["lucidlink-mcp"]
+      "args": ["lucidlink-mcp@latest"]
     }
   }
 }

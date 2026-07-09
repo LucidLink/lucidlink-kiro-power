@@ -22,7 +22,7 @@ before deleting anything.
 ```
 lucidlink-kiro-power/
 ├── POWER.md        # metadata + keywords + onboarding + steering map
-├── mcp.json        # the LucidLink MCP server (uvx lucidlink-mcp)
+├── mcp.json        # the LucidLink MCP server (uvx lucidlink-mcp@latest)
 └── steering/
     ├── canonical-flow.md          # orient → read → write
     ├── editing-safely.md          # claim + dry-run before any write, confirm deletes, encryption
