@@ -4,12 +4,27 @@ Load this when navigating, reading, or editing files in a LucidLink filespace.
 
 ## Session start
 
-- Lead with `list_filespaces` so the choice is explicit: if there is exactly
-  one, link it with `link_filespace(name=...)`; if there are several, ask the
-  user which one before linking. Confirm with `current_filespace`.
+- Lead with `list_filespaces` so the choice is explicit (already-linked
+  filespaces are marked): if there is exactly one, link it; if there are
+  several, ask the user which one(s) before linking. Confirm with
+  `current_filespace`.
+- Linking is ADDITIVE: linking another filespace keeps existing links live
+  and just changes which one is current. File tools always act on the
+  CURRENT filespace - when several are linked, state which filespace you are
+  acting on whenever you read or write, and check `current_filespace` when
+  in doubt.
+- Concurrent links are capped (default 4 per account, each holding a ~1 GB
+  local cache). `unlink_filespace(name=...)` frees one you no longer need -
+  but unlinking drops that filespace's locks and subscriptions, so finish
+  and release work there first.
 - The server auto-links on the first file operation when the choice is
   unambiguous - but don't rely on that when several exist; an operation will
   just report no/ambiguous link.
+- With several configured accounts, `link_filespace` resolves across ALL of
+  them and switches account automatically; `use_account` is only for
+  changing identity without linking. Address filespaces by short name, id,
+  or the unique full name `<filespace>.<workspace>` - use the full name when
+  short names collide across workspaces.
 - `whoami` shows identity, token status, and what is linked - use it when
   unsure about session state.
 
@@ -24,18 +39,19 @@ Load this when navigating, reading, or editing files in a LucidLink filespace.
 
 - Text files: use `read_lines` (plaintext, 1-indexed, numbered). Read the
   range you need, not the whole file.
-- `read_file` returns base64 (binary-safe). Use it only for binary content
-  or when you genuinely need exact whole-file bytes; decode before reasoning
-  about text.
+- `read_file` returns plain text for text content and base64 for binary (an
+  `encoding` parameter forces either). Use it for binary content or exact
+  whole-file bytes; for text sections prefer `read_lines`.
 
 ## Writing and editing
 
 - Edit existing text files with `edit_lines` (line-range replace) or
   `search_replace` (literal or regex). Both accept plaintext and support
   `dry_run=true` - preview any multi-line or repeated replacement first.
-- Create new files with `write_file`; content must be base64-encoded
-  (`create_parents=true` to make missing directories). Appends:
-  `append_file`, also base64.
+- Create new files with `write_file`: pass plain `content` for text, or
+  `content_base64` for binary (missing parent directories are created
+  automatically; `create_parents=false` to error instead). Appends:
+  `append_file`, same two content forms.
 - Paths are POSIX-style and absolute, rooted at the filespace: `/dir/file`.
 - Every write syncs to the hub automatically - teammates see it within
   seconds. There is no "draft" state: write what is meant to be shared.

@@ -1,8 +1,10 @@
 # LucidLink Power for Kiro
 
 A custom [Kiro](https://kiro.dev) **Power** that lets Kiro work with files in
-your [LucidLink](https://www.lucidlink.com) filespace - safely, even when
-teammates (or other agents) are editing the same files at the same time.
+your [LucidLink](https://www.lucidlink.com) filespaces - safely, even when
+teammates (or other agents) are editing the same files at the same time. Kiro
+can stay connected to several filespaces at once and switch between them
+instantly.
 
 A Power loads on demand: when your conversation mentions the filespace (or any
 of the power's keywords), Kiro activates it and pulls in the LucidLink tools
@@ -85,6 +87,33 @@ loads them on demand using the map in `POWER.md`:
 | **Editing safely** | Two preconditions on every write, kept in one file so they always load together: the filespace is multi-writer, so Kiro claims a file (non-blocking) before any edit and releases right after; and it dry-runs any multi-line/multi-occurrence change first to preview the match before applying. Plus explicit confirmation before deletes, no slurping huge files, and content stays in the session. |
 | **Workspace administration** | Optional admin plane (members, roles, permissions, groups, filespace lifecycle). Off by default; when asked for an admin action whose tool is missing, Kiro walks you through enabling it instead of failing. |
 
+## Multiple filespaces and accounts
+
+Linking is additive: ask Kiro to link a second filespace and the first stays
+connected - switching back is instant, and file locks stay attached to the
+filespace that owns them. File tools always act on the *current* filespace,
+and Kiro says which one it's working in when several are linked. Up to 4
+filespaces can be linked at once per account (each holds a ~1 GB local
+cache); Kiro unlinks ones it no longer needs.
+
+Working across more than one workspace (or differently-scoped service
+accounts)? Configure named accounts in `~/.lucidlink/mcp-config.json`:
+
+```json
+{
+  "accounts": {
+    "prod": "sa_live:...",
+    "staging": "sa_live:..."
+  },
+  "defaultAccount": "prod"
+}
+```
+
+Kiro resolves filespace names across all accounts - asking for a filespace
+that another account can see switches to it automatically. When two
+workspaces have filespaces with the same short name, use the unique full
+name `<filespace>.<workspace>`.
+
 ## Workspace administration (opt-in)
 
 By default the power only touches files inside a filespace. To let Kiro manage
@@ -110,6 +139,8 @@ Set under the server's `env` in `mcp.json`:
   `lucidlink` entry - analysis-only projects can't write at all.
 - **Pin a filespace:** `"env": { "LUCIDLINK_FILESPACE": "<name>" }` skips the
   which-filespace question for multi-filespace accounts.
+- **Pin an account:** `"env": { "LUCIDLINK_ACCOUNT": "<name>" }` picks which
+  configured account is the default.
 
 ## Troubleshooting
 
@@ -118,7 +149,7 @@ Set under the server's `env` in `mcp.json`:
 | Auth errors / "token rejected" | Check `~/.lucidlink/mcp-config.json`. Careful: a `LUCIDLINK_TOKEN` in `mcp.json`'s `env` **overrides** the config file - remove placeholder values. |
 | Power never activates | Make sure your message uses one of the keywords (filespace, LucidLink, shared storage…), or re-import the power and confirm it's enabled in the Powers panel. |
 | MCP server shows no tools | First launch builds the package - give it a few seconds and refresh the MCP panel. Check `uv` is installed. |
-| "No filespace linked" | Account sees several filespaces: ask Kiro to `list_filespaces` and link one, or pin via `LUCIDLINK_FILESPACE`. |
+| "No filespace linked" | Account sees several filespaces: ask Kiro to `list_filespaces` and link one (linking more later is fine - it's additive), or pin a default via `LUCIDLINK_FILESPACE`. |
 | Kiro's claim is always `BLOCKED` | Someone (or some agent) holds the file - that's the protection working. Ask Kiro to retry, or find the other writer. |
 
 ## Links

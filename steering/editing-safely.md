@@ -24,7 +24,7 @@ multi-line/multi-occurrence edit and have not just read its dry-run preview,
 STOP and dry-run it first.
 
 Before issuing any write tool call, restate to yourself: "I hold claim
-<handle> for <path>" and, for multi-line edits, "I dry-ran this and the preview
+<handle> for <path> in <filespace>" and, for multi-line edits, "I dry-ran this and the preview
 showed <N> expected changes." If you cannot fill in both blanks, you are not
 ready to write.
 
@@ -83,6 +83,12 @@ context), stop and show the user before applying anywhere else.
   `include_pattern`, and check sizes with `get_entry` first.
 - Media and other large binaries: operate on metadata and paths; don't read
   content through the MCP unless explicitly needed.
-- Do not `link_filespace` to a different filespace, or `unlink_filespace`,
-  unless the user asks - switching mid-task silently changes what every path
-  refers to.
+- Paths are meaningful only relative to the CURRENT filespace - the same
+  path can exist in several linked filespaces. Before any write, be sure
+  which filespace is current (`current_filespace`), and never switch
+  filespaces mid-edit (between claim and release).
+- `unlink_filespace` drops that filespace's claims, locks, and
+  subscriptions. Never unlink while holding a claim there - release first.
+  Free links you no longer need (they're capped and each holds a local
+  cache), but don't unlink a filespace the user asked to work in without
+  telling them.

@@ -8,12 +8,13 @@ author: "LucidLink"
 
 # LucidLink Filespace
 
-You are operating on a shared LucidLink filespace - cloud storage that behaves
-like a filesystem and is shared live with the user's team and other agents. You
-read, write, search, and organize filespace files exclusively through the
-`lucidlink` MCP tools. Always treat the filespace as **multi-writer**: claim
-files before editing them and release them when done, because other humans and
-agents may be working in the same files at the same time.
+You are operating on shared LucidLink filespaces - cloud storage that behaves
+like a filesystem and is shared live with the user's team and other agents.
+Several filespaces can be linked at once; file tools act on the **current**
+one. You read, write, search, and organize filespace files exclusively through
+the `lucidlink` MCP tools. Always treat every filespace as **multi-writer**:
+claim files before editing them and release them when done, because other
+humans and agents may be working in the same files at the same time.
 
 ## Onboarding
 
@@ -43,14 +44,19 @@ Run these checks the first time the power is used, then report what you found.
   A `LUCIDLINK_TOKEN` env value in `mcp.json` would **override** this file -
   leave it unset unless you mean to.
 
+  Several workspaces or identities? Configure named accounts (an `accounts`
+  map in the same file) - see the README.
+
 ### Step 3: Orient
 
 - Call `whoami` to confirm identity and token status.
-- Call `list_filespaces` to see what the account can reach, then link one:
-  if there is exactly one, link it with `link_filespace(name=...)`; if there
-  are several, show the user the list and ask which to connect before linking.
-  Confirm with `current_filespace`.
-- Map the linked filespace with `tree` (set `max_depth`) so you have your
+- Call `list_filespaces` to see what the account can reach (already-linked
+  filespaces are marked), then link what the task needs: if there is exactly
+  one, link it; if there are several, show the user the list and ask which to
+  connect. Linking is **additive** - connecting another filespace keeps the
+  previous ones live. Confirm with `current_filespace` (it also lists the
+  other live links).
+- Map the current filespace with `tree` (set `max_depth`) so you have your
   bearings.
 
 ## When to load steering files
@@ -72,16 +78,20 @@ write; one precondition without the other is a protocol violation.
 ## Tool quick reference
 
 - **Orient:** `whoami`, `current_filespace`, `list_filespaces`, `link_filespace`,
-  `tree`, `list_files`, `count_files`.
+  `unlink_filespace`, `tree`, `list_files`, `count_files`.
+- **Accounts** (multi-workspace setups): `list_accounts`, `use_account` -
+  rarely needed directly: `link_filespace` resolves filespace names across all
+  configured accounts and switches automatically.
 - **Search:** `find_files` (by name), `grep_files` (by content) - always narrow
   with `path_prefix` and `include_pattern` on large filespaces.
 - **Read:** `read_lines` (plaintext, 1-indexed - prefer this for text),
-  `read_file` (base64, for binary or exact whole-file bytes), `get_entry`
-  (metadata/size).
+  `read_file` (plain text for text, base64 for binary; for binary or exact
+  whole-file bytes), `get_entry` (metadata/size).
 - **Write text:** `edit_lines` (line-range replace), `search_replace` (literal
   or regex) - both support `dry_run=true`.
-- **Write whole/new files:** `write_file`, `append_file` (both base64;
-  `create_parents=true` to make missing dirs).
+- **Write whole/new files:** `write_file`, `append_file` (plain `content`
+  for text, `content_base64` for binary; missing parent dirs are created
+  automatically), `write_at` (same content forms, at a byte offset).
 - **Organize:** `copy_file`, `move_path`, `create_directory`, `delete_path`.
 - **Locks:** `claim_file`, `release_file`, `lock_byte_range`, `unlock_byte_range`,
   `list_locks_held`.
