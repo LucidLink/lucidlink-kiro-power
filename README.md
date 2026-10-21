@@ -85,7 +85,7 @@ loads them on demand using the map in `POWER.md`:
 |---|---|
 | **Canonical flow** | Orient with `tree`/`grep` before acting; read text with line-based tools; keep searches narrow on big filespaces. |
 | **Editing safely** | Two preconditions on every write, kept in one file so they always load together: the filespace is multi-writer, so Kiro claims a file (non-blocking) before any edit and releases right after; and it dry-runs any multi-line/multi-occurrence change first to preview the match before applying. Plus explicit confirmation before deletes, no slurping huge files, and content stays in the session. |
-| **Workspace administration** | Optional admin plane (members, roles, permissions, groups, filespace lifecycle). Off by default; when asked for an admin action whose tool is missing, Kiro walks you through enabling it instead of failing. |
+| **Workspace administration** | Optional admin plane (members, permissions, groups, service accounts, filespace lifecycle). Off by default; when asked for an admin action whose tool is missing, Kiro walks you through enabling it instead of failing. |
 
 ## Multiple filespaces and accounts
 
@@ -117,9 +117,9 @@ name `<filespace>.<workspace>`.
 ## Workspace administration (opt-in)
 
 By default the power only touches files inside a filespace. To let Kiro manage
-the **workspace** - invite/remove members, roles, permissions, groups, create
-or delete filespaces, inspect audit trails - enable the admin toolset. You need
-**Node 22+** installed (`node --version`). Then add an `env` block to the Power's server entry in
+the **workspace** - invite/remove members, permissions, groups, service
+accounts, create or delete filespaces, inspect audit trails - enable the admin
+toolset. You need **Node 22+** installed (`node --version`). Then add an `env` block to the Power's server entry in
 `~/.kiro/settings/mcp.json` (the Power nests its server under a top-level
 `"powers"` key with a namespaced name) and reload Kiro:
 
@@ -156,4 +156,5 @@ Set under the server's `env` in `mcp.json`:
 
 - [Kiro Powers docs](https://kiro.dev/docs/powers/)
 - [LucidLink MCP server on PyPI](https://pypi.org/project/lucidlink-mcp/)
+- [LucidLink MCP server docs](https://developer.lucidlink.com/docs/mcp/overview)
 - [LucidLink AI](https://github.com/LucidLink/lucidlink-ai)

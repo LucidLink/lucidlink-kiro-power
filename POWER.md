@@ -67,7 +67,7 @@ Load the matching `steering/` file before acting on that kind of task:
 - Any write, edit, move, delete, bulk replacement, or destructive op on an
   existing path → `editing-safely.md` (claim AND dry-run preconditions live
   here together - always load it before writing)
-- Managing the workspace itself - members, roles, permissions, groups,
+- Managing the workspace itself - members, permissions, groups,
   filespace lifecycle, audit trails, service accounts → `workspace-administration.md`
 
 These are not optional: any edit to an existing file requires BOTH preconditions
@@ -90,8 +90,9 @@ write; one precondition without the other is a protocol violation.
 - **Write text:** `edit_lines` (line-range replace), `search_replace` (literal
   or regex) - both support `dry_run=true`.
 - **Write whole/new files:** `write_file`, `append_file` (plain `content`
-  for text, `content_base64` for binary; missing parent dirs are created
-  automatically), `write_at` (same content forms, at a byte offset).
+  for text, base64 `content` with `encoding="base64"` for binary; missing
+  parent dirs are created automatically), `write_at` (same content forms, at
+  a byte offset).
 - **Organize:** `copy_file`, `move_path`, `create_directory`, `delete_path`.
 - **Locks:** `claim_file`, `release_file`, `lock_byte_range`, `unlock_byte_range`,
   `list_locks_held`.

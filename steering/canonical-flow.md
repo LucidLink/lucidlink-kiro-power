@@ -49,9 +49,9 @@ Load this when navigating, reading, or editing files in a LucidLink filespace.
   `search_replace` (literal or regex). Both accept plaintext and support
   `dry_run=true` - preview any multi-line or repeated replacement first.
 - Create new files with `write_file`: pass plain `content` for text, or
-  `content_base64` for binary (missing parent directories are created
-  automatically; `create_parents=false` to error instead). Appends:
-  `append_file`, same two content forms.
+  base64 `content` with `encoding="base64"` for binary (missing parent
+  directories are created automatically; `create_parents=false` to error
+  instead). Appends: `append_file`, same two content forms.
 - Paths are POSIX-style and absolute, rooted at the filespace: `/dir/file`.
 - Every write syncs to the hub automatically - teammates see it within
   seconds. There is no "draft" state: write what is meant to be shared.

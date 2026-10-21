@@ -2,7 +2,8 @@
 
 Load this when the task is about the LucidLink **workspace** rather than files
 inside a filespace: inviting or removing members, permissions, groups,
-creating/renaming/deleting filespaces, audit trails, or direct links.
+creating/renaming/deleting filespaces, service accounts, audit trails, or
+direct links.
 
 ## Admin tools are OFF by default - enable them first
 
@@ -72,18 +73,26 @@ the MCP panel. On top of that:
 `list_workspace_filespaces_admin`, `get_filespace_info_admin`,
 `list_workspace_members_admin`, `find_member_admin`,
 `list_workspace_groups_admin`, `list_group_members_admin`,
-`list_permissions_admin`,
-`get_audit_trail_status_admin`, `list_storage_providers_admin`.
+`list_permissions_admin`, `list_service_accounts_admin`,
+`list_identities_admin`, `get_audit_trail_status_admin`,
+`list_storage_providers_admin`.
 
 **Additive (create/grant - confirm intent):** `grant_permission_admin`,
 `enable_audit_trail_admin`, `create_workspace_group_admin`,
-`add_group_member_admin`, `invite_member_admin` (invite by email with a role).
+`add_group_member_admin`, `invite_member_admin` (invite by email, optionally
+into groups), `mint_service_account_admin` (a collaborator service account
+with no access until granted), `create_identity_admin` (another credential
+for an existing service account).
 
 **Destructive (confirm explicitly, name the target):**
 `remove_member_admin`, `remove_group_member_admin`, `revoke_permission_admin`,
 `rename_filespace_admin`, `delete_filespace_admin`, `create_filespace_admin`,
 `rename_workspace_group_admin`, `delete_workspace_group_admin`,
-`disable_audit_trail_admin`, `generate_direct_link_admin`.
+`disable_audit_trail_admin`, `delete_service_account_admin`,
+`delete_identity_admin`, `generate_direct_link_admin` (takes a `paths` list -
+up to 100 links in one call).
 
-Member role changes and service-account lifecycle (mint/rotate/delete) are not
-exposed through the MCP - direct the user to the LucidLink web app for those.
+Service-account tokens are written to `~/.lucidlink/sa-*.token` files and
+never returned to you - give the user the path, don't read the file. Member
+role changes are not exposed through the MCP - direct the user to the
+LucidLink web app for those.
